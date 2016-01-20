@@ -38,7 +38,7 @@ runUI :: forall e. Signal VNode -> (forall h. Eff (st :: ST h, timer :: Timer, d
 runUI ui = do
   uiStateRef <- newSTRef Unmounted
   animation <- animationFrame
-  runSignal $ update uiStateRef <$> sampleOn animation ui
+  runSignal $ update uiStateRef <~ sampleOn animation ui
   where
   update uiStateRef current = void do
     uiState <- readSTRef uiStateRef
