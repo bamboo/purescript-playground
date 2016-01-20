@@ -1,5 +1,7 @@
 module Main where
+
 import Prelude
+
 import Control.Monad.Eff
 import Control.Monad.ST
 import Control.Timer (Timer())
@@ -26,7 +28,7 @@ main = do
   runUI $ render <~ mouse
   where
   render pos =
-    svg {width: "100%", height: "100%"}
+    svg { width: "100%", height: "100%" }
         [ circle {cx: pos.x, cy: pos.y, r: 20, fill: "lime"} []
         ]
 
