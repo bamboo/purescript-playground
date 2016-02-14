@@ -17,7 +17,7 @@ foreign import vtext :: String -> VNode
 
 foreign import diff :: VNode -> VNode -> Patch
 
-foreign import patch :: forall eff. Node -> Patch -> Eff (dom :: DOM | eff) Unit
+foreign import patch :: forall eff. Node -> Patch -> Eff (dom :: DOM | eff) Node
 
 foreign import createElement :: forall eff. VNode -> Eff (dom :: DOM | eff) Node
 

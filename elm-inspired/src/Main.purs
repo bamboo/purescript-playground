@@ -50,9 +50,8 @@ runUI ui = do
     node <- createElement current
     appendToBody node
     return node
-  mountOrPatch (Mounted node previous) current = do
+  mountOrPatch (Mounted node previous) current =
     patch node (diff previous current)
-    return node
 
 appendToBody :: forall eff. H.Node -> Eff (dom :: DOM | eff) (Maybe H.Node)
 appendToBody node = do
