@@ -1,26 +1,18 @@
 module Main where
 
-import Prelude
+import Prelude (Unit, ($), bind, return, void)
 
-import Control.Monad.Eff
-import Control.Monad.ST
+import Control.Monad.Eff (Eff)
+import Control.Monad.ST (ST, newSTRef, writeSTRef, readSTRef)
 import Control.Timer (Timer())
 
-import Signal
-import Signal.DOM
+import Signal (Signal, sampleOn, (<~), runSignal)
+import Signal.DOM (animationFrame, mousePos)
 
-import Data.Nullable
-import Data.Maybe
+import DOM (DOM)
+import DOM.Node.Types (Node)
 
-import DOM
-import DOM.HTML as H
-import DOM.HTML.Document as H
-import DOM.HTML.Types as H
-import DOM.HTML.Window as H
-import DOM.Node.Node as H
-import DOM.Node.Types as H
-
-import VirtualDOM
+import VirtualDOM (VNode, diff, patch, createElement, circle, svg)
 
 main :: forall e h. Eff (st :: ST h, timer :: Timer, dom :: DOM | e) Unit
 main = do
@@ -34,7 +26,7 @@ main = do
 
 data UIState
   = Unmounted
-  | Mounted H.Node VNode
+  | Mounted Node VNode
 
 runUI :: forall e. Signal VNode -> (forall h. Eff (st :: ST h, timer :: Timer, dom :: DOM | e) Unit)
 runUI ui = do
@@ -53,9 +45,4 @@ runUI ui = do
   mountOrPatch (Mounted node previous) current =
     patch node (diff previous current)
 
-appendToBody :: forall eff. H.Node -> Eff (dom :: DOM | eff) (Maybe H.Node)
-appendToBody node = do
-  maybeBody <- toMaybe <$> (H.window >>= H.document >>= H.body)
-  case maybeBody of
-    Just body -> Just <$> (H.htmlElementToNode body # H.appendChild node)
-    _         -> return Nothing
+foreign import appendToBody :: forall eff. Node -> Eff (dom :: DOM | eff) Unit
